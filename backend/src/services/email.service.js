@@ -1,12 +1,11 @@
 import transporter from "../config/mail.js";
 
-const sendEmail = async ({ to, subject, html, text }) => {
+const sendEmail = async ({ to, subject, html }) => {
   try {
     const info = await transporter.sendMail({
       from: process.env.MAIL_FROM,
       to,
       subject,
-      text,
       html,
     });
 

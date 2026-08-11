@@ -22,6 +22,9 @@ app.use(cookieParser());
 
 app.use(morgan("dev"));
 
+import authRouter from "./routes/auth.routes.js";
+app.use("/api/v1", authRouter);
+
 app.get("/", (req, res) => {
   res.status(200).json({
     success: true,
