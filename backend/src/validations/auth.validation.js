@@ -52,3 +52,13 @@ export const registerSchema = z.object({
       error: "Password must contain at least one special character",
     }),
 });
+
+export const verifyEmailSchema = z.object({
+  email: z
+    .string()
+    .email("Please provide a valid email address")
+    .trim()
+    .toLowerCase(),
+
+  otp: z.string().regex(/^\d{6}$/, "OTP must be exactly 6 digits"),
+});
