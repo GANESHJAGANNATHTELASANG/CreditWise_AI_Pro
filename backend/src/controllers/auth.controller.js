@@ -8,7 +8,6 @@ import { generateOTP } from "../utils/otp.js";
 import { redisClient } from "../config/redis.js";
 import { sendEmail } from "../services/email.service.js";
 import { getOtpHtml } from "../utils/getOtpHtml.js";
-import { use } from "react";
 
 export const register = async (req, res) => {
   try {
@@ -135,6 +134,7 @@ export const otpVerfication = async (req, res) => {
     user.isEmailVerified = "true";
 
     await user.save();
+    await redisClient.del(otpKey);
     return res.status(200).json({
       message: `${user.name} u  are most welcome to Creadite Loan AI webite`,
     });
