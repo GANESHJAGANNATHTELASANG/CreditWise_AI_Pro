@@ -56,7 +56,6 @@ export const registerSchema = z.object({
 export const verifyEmailSchema = z.object({
   email: z
     .string()
-    .email("Please provide a valid email address")
     .trim()
     .toLowerCase(),
 

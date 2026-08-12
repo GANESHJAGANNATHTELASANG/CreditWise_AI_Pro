@@ -8,6 +8,7 @@ import { generateOTP } from "../utils/otp.js";
 import { redisClient } from "../config/redis.js";
 import { sendEmail } from "../services/email.service.js";
 import { getOtpHtml } from "../utils/getOtpHtml.js";
+import { generateToken } from "../services/token.service.js";
 
 export const register = async (req, res) => {
   try {
@@ -124,16 +125,22 @@ export const otpVerfication = async (req, res) => {
         .json({ message: "the otp is expired so register again bro" });
     }
 
-    if (redisdOtp != otp) {
+    if (redisdOtp !== otp) {
       return res.status(400).json({
         message:
           "otp is mismatch to the email otp so plz enter the crt otp bro",
       });
     }
 
-    user.isEmailVerified = "true";
+    user.isEmailVerified = true;
 
     await user.save();
+    const token = await generateToken(user._id.toString(), res);
+    if (!token) {
+      return res.status(400).json({
+        message: "the error in the genarating the access and refresh torken",
+      });
+    }
     await redisClient.del(otpKey);
     return res.status(200).json({
       message: `${user.name} u  are most welcome to Creadite Loan AI webite`,
