@@ -54,10 +54,45 @@ export const registerSchema = z.object({
 });
 
 export const verifyEmailSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .toLowerCase(),
+  email: z.string().trim().toLowerCase(),
 
   otp: z.string().regex(/^\d{6}$/, "OTP must be exactly 6 digits"),
+});
+
+export const loginSchema = z.object({
+  email: z
+    .string({
+      error: "Email is required",
+    })
+    .trim()
+    .toLowerCase()
+    .email({
+      error: "Please provide a valid email address",
+    })
+    .max(254, {
+      error: "Email address is too long",
+    }),
+
+  password: z
+    .string({
+      error: "Password is required",
+    })
+    .min(8, {
+      error: "Password must be at least 8 characters long",
+    })
+    .max(72, {
+      error: "Password must not exceed 72 characters",
+    })
+    .regex(/[A-Z]/, {
+      error: "Password must contain at least one uppercase letter",
+    })
+    .regex(/[a-z]/, {
+      error: "Password must contain at least one lowercase letter",
+    })
+    .regex(/[0-9]/, {
+      error: "Password must contain at least one number",
+    })
+    .regex(/[^A-Za-z0-9]/, {
+      error: "Password must contain at least one special character",
+    }),
 });

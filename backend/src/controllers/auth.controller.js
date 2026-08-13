@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import {
+  loginSchema,
   registerSchema,
   verifyEmailSchema,
 } from "../validations/auth.validation.js";
@@ -151,5 +152,69 @@ export const otpVerfication = async (req, res) => {
     return res
       .status(400)
       .json({ message: "error in the otpp verificatin", err: error.message });
+  }
+};
+
+export const loginUser = async (req, res) => {
+  try {
+    const result = loginSchema.safeParse(req.body);
+
+    if (!result.success) {
+      const allError = result.error.issues.map((isuue) => ({
+        path: isuue.path.join(".") || "unknow",
+        message: isuue.message || "unknow",
+        code: isuue.code || "no code",
+      }));
+
+      return res
+        .status(400)
+        .json({ message: "there is error bro", error: allError });
+    }
+
+    const { email, password } = result.data;
+
+    console.log("email :", email);
+    console.log("password :", password);
+
+    const rateLimitkey = `login-rate=limit:${req.ip}:${email}`;
+    const rateLimit = await redisClient.get(rateLimitkey);
+
+    if (rateLimit) {
+      return res.status(400).json({
+        message: "u hit the limit for login wait few minute to get to login",
+      });
+    }
+
+    const user = await User.findOne({ email }).select("+password");
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ message: "the user is not found so plz register" });
+    }
+    console.log("name :", user.name);
+    console.log("mongodb password :", user.password);
+    const checkPassword = await bcrypt.compare(password, user.password);
+    if (!checkPassword) {
+      return res.status(400).json({
+        message: "the password is not crt so plx enter the valid password",
+      });
+    }
+
+    const otp = generateOTP();
+    console.log(otp);
+    const otpKey = `otpKey:${email}`;
+    const expiryMinutes = 5;
+    const html = getOtpHtml(otp, user.name, expiryMinutes);
+    const subject = "for email verification we sent otp so get that";
+    await redisClient.setEx(otpKey, 300, otp);
+    await sendEmail({ to: email, subject, html });
+    redisClient.setEx(rateLimitkey, 60, "true");
+
+    return res
+      .status(200)
+      .json({ message: "the otp ois sent to ur email check and verify" });
+  } catch (error) {
+    console.log("error in the login controller", error);
   }
 };
