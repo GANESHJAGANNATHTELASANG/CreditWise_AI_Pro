@@ -354,3 +354,26 @@ export const myProfile = async (req, res) => {
     .status(200)
     .json({ message: `${user.name} profile is sent as respose` });
 };
+
+export const logoutUser = async (req, res) => {
+  try {
+    console.log("start");
+    const user = req.user;
+    console.log("end");
+
+    const refreshTokenKey = `refreshTokenKey:${user._id}`;
+
+    await redisClient.del(refreshTokenKey);
+
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+
+    return res.status(200).json({ message: ` is successfully lougout` });
+  } catch (error) {
+    console.log("the error in the logout route");
+
+    return res
+      .status(400)
+      .json({ message: "the error in the logout user route", error });
+  }
+};
