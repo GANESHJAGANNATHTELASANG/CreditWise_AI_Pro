@@ -205,7 +205,7 @@ export const loginUser = async (req, res) => {
     console.log(otp);
     const otpKey = `otpKey:${email}`;
     const expiryMinutes = 5;
-    const html = getOtpHtml(otp, user.name, expiryMinutes);
+    const html = getOtpHtml({ otp, name: user.name, expiryMinutes });
     const subject = "for email verification we sent otp so get that";
     await redisClient.setEx(otpKey, 300, otp);
     await sendEmail({ to: email, subject, html });
