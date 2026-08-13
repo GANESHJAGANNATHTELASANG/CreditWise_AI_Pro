@@ -1,3 +1,4 @@
+import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import {
   loginSchema,
@@ -216,5 +217,65 @@ export const loginUser = async (req, res) => {
       .json({ message: "the otp ois sent to ur email check and verify" });
   } catch (error) {
     console.log("error in the login controller", error);
+    return res
+      .status(400)
+      .json({ message: "the error in the login time", error: error });
+  }
+};
+
+export const refreshAccessToken = async (req, res) => {
+  try {
+    const cookiesRef = req.cookies.refreshToken;
+
+    if (!cookiesRef) {
+      return res
+        .status(400)
+        .json({ message: "the refreshToken is not found in the cookies" });
+    }
+
+    const verifyRef = jwt.verify(cookiesRef, process.env.SECRATE_TOKEN_REF);
+    if (!verifyRef) {
+      return res.status(400).json({
+        message: "the refreshToken is not matches to our secreat code",
+      });
+    }
+
+    const refreshKey = `refreshTokenKey:${verifyRef.userId}`;
+
+    const redisRef = await redisClient.get(refreshKey);
+
+    if (!redisRef) {
+      return res.status(400).json({
+        message: "the refreshToken is not in the redis so plz login ",
+      });
+    }
+
+    if (redisRef !== cookiesRef) {
+      return res.status(400).json({
+        message: "refresh token from cookies and redis are not same or equal",
+      });
+    }
+
+    const accessToken = jwt.sign(
+      { userId: verifyRef.userId },
+      process.env.SECRATE_TOKEN_ACC,
+      {
+        expiresIn: "1m",
+      },
+    );
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 1 * 60 * 1000,
+    });
+
+    return res.status(200).json({ message: "the accessToken is refreshed" });
+  } catch (error) {
+    return res.status(400).json({
+      message: "the error in the refresging the access token ",
+      error,
+    });
   }
 };
