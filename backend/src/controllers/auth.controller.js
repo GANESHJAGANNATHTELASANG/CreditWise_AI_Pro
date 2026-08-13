@@ -174,9 +174,6 @@ export const loginUser = async (req, res) => {
 
     const { email, password } = result.data;
 
-    console.log("email :", email);
-    console.log("password :", password);
-
     const rateLimitkey = `login-rate=limit:${req.ip}:${email}`;
     const rateLimit = await redisClient.get(rateLimitkey);
 
@@ -193,8 +190,7 @@ export const loginUser = async (req, res) => {
         .status(400)
         .json({ message: "the user is not found so plz register" });
     }
-    console.log("name :", user.name);
-    console.log("mongodb password :", user.password);
+
     const checkPassword = await bcrypt.compare(password, user.password);
     if (!checkPassword) {
       return res.status(400).json({
@@ -220,6 +216,78 @@ export const loginUser = async (req, res) => {
     return res
       .status(400)
       .json({ message: "the error in the login time", error: error });
+  }
+};
+
+export const verifyLoginOtp = async (req, res) => {
+  try {
+    const result = verifyEmailSchema.safeParse(req.body);
+
+    if (!result.success) {
+      const allError = result.error.issues.map((issue) => ({
+        path: issue.path.join(".") || "unknown",
+        message: issue.message || "Invalid input",
+        code: issue.code || "invalid_input",
+      }));
+
+      return res.status(400).json({
+        success: false,
+        message: "Validation error",
+        errors: allError,
+      });
+    }
+
+    const { email, otp } = result.data;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid login attempt.",
+      });
+    }
+
+    if (!user.isEmailVerified) {
+      return res.status(403).json({
+        success: false,
+        message: "Please verify your email first. or register first",
+      });
+    }
+
+    const otpKey = `otpKey:${email}`;
+
+    const redisOtp = await redisClient.get(otpKey);
+
+    if (!redisOtp) {
+      return res.status(400).json({
+        success: false,
+        message: "OTP has expired. Please login again.",
+      });
+    }
+
+    if (redisOtp !== otp) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP.",
+      });
+    }
+
+    await generateToken(user._id.toString(), res);
+
+    await redisClient.del(otpKey);
+
+    return res.status(200).json({
+      success: true,
+      message: `Welcome back ${user.name}! Login successful.`,
+    });
+  } catch (error) {
+    console.error("LOGIN OTP VERIFICATION ERROR:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error.",
+    });
   }
 };
 
