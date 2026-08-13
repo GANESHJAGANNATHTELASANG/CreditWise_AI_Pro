@@ -347,3 +347,10 @@ export const refreshAccessToken = async (req, res) => {
     });
   }
 };
+
+export const myProfile = async (req, res) => {
+  const user = req.user;
+  return res
+    .status(200)
+    .json({ message: `${user.name} profile is sent as respose` });
+};
