@@ -4,6 +4,7 @@ import {
   loginSchema,
   registerSchema,
   verifyEmailSchema,
+  forgotPasswordSchema,
 } from "../validations/auth.validation.js";
 import bcrypt from "bcrypt";
 import { generateOTP } from "../utils/otp.js";
@@ -375,5 +376,194 @@ export const logoutUser = async (req, res) => {
     return res
       .status(400)
       .json({ message: "the error in the logout user route", error });
+  }
+};
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const result = forgotPasswordSchema.safeParse(req.body);
+
+    if (!result.success) {
+      const errors = result.error.issues.map((issue) => ({
+        path: issue.path.join(".") || "unknown",
+        message: issue.message || "Invalid input",
+        code: issue.code || "invalid_input",
+      }));
+
+      return res.status(400).json({
+        message: "validation error",
+        errors,
+      });
+    }
+
+    const { email } = result.data;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "user is not found",
+      });
+    }
+
+    const otp = generateOTP();
+
+    const otpKey = `forgotPasswordOtp:${email}`;
+
+    await redisClient.setEx(otpKey, 300, otp);
+
+    const expiryMinutes = 5;
+
+    const html = getOtpHtml({
+      otp,
+      name: user.name,
+      expiryMinutes,
+    });
+
+    const subject = "Reset your CreditWise password";
+
+    await sendEmail({
+      to: email,
+      subject,
+      html,
+    });
+
+    res.cookie("forgotPasswordEmail", email, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 5 * 60 * 1000,
+    });
+
+    return res.status(200).json({
+      success: true,
+      message: "OTP sent to your email",
+    });
+  } catch (error) {
+    console.error("FORGOT PASSWORD ERROR:", error);
+
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+export const verifyForgotPasswordOtp = async (req, res) => {
+  try {
+    const { otp } = req.body;
+
+    const email = req.cookies.forgotPasswordEmail;
+
+    if (!email) {
+      return res.status(400).json({
+        message: "Password reset session not found",
+      });
+    }
+
+    if (!otp) {
+      return res.status(400).json({
+        message: "OTP is required",
+      });
+    }
+
+    const otpKey = `forgotPasswordOtp:${email}`;
+
+    const redisOtp = await redisClient.get(otpKey);
+
+    if (!redisOtp) {
+      return res.status(400).json({
+        message: "OTP expired. Please request a new OTP",
+      });
+    }
+
+    if (redisOtp !== otp) {
+      return res.status(400).json({
+        message: "Invalid OTP",
+      });
+    }
+
+    await redisClient.del(otpKey);
+
+    const resetKey = `passwordReset:${email}`;
+
+    await redisClient.setEx(resetKey, 10 * 60, "true");
+
+    return res.status(200).json({
+      success: true,
+      message: "OTP verified. You can now reset your password",
+    });
+  } catch (error) {
+    console.error("VERIFY FORGOT PASSWORD OTP ERROR:", error);
+
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { newPassword } = req.body;
+
+    const email = req.cookies.forgotPasswordEmail;
+
+    if (!email) {
+      return res.status(400).json({
+        message: "Password reset session not found",
+      });
+    }
+
+    if (!newPassword) {
+      return res.status(400).json({
+        message: "New password is required",
+      });
+    }
+
+    const resetKey = `passwordReset:${email}`;
+
+    const resetAllowed = await redisClient.get(resetKey);
+
+    if (!resetAllowed) {
+      return res.status(401).json({
+        message: "OTP verification expired. Please verify your OTP again",
+      });
+    }
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "User not found",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+
+    await user.save();
+
+    await redisClient.del(resetKey);
+
+    const refreshTokenKey = `refreshTokenKey:${user._id}`;
+
+    await redisClient.del(refreshTokenKey);
+
+    res.clearCookie("forgotPasswordEmail");
+
+    res.clearCookie("accessToken");
+
+    res.clearCookie("refreshToken");
+
+    return res.status(200).json({
+      success: true,
+      message: "Password reset successfully. Please login again",
+    });
+  } catch (error) {
+    console.error("RESET PASSWORD ERROR:", error);
+
+    return res.status(500).json({
+      message: "Internal server error",
+    });
   }
 };

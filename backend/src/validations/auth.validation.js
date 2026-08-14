@@ -96,3 +96,18 @@ export const loginSchema = z.object({
       error: "Password must contain at least one special character",
     }),
 });
+
+export const forgotPasswordSchema = z.object({
+  email: z
+    .string({
+      error: "Email is required",
+    })
+    .trim()
+    .toLowerCase()
+    .email({
+      error: "Please provide a valid email address",
+    })
+    .max(254, {
+      error: "Email address is too long",
+    }),
+});
