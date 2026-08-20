@@ -25,4 +25,5 @@ router.post("/logout", isAuth, logoutUser);
 router.post("/forgetpass", forgotPassword);
 router.post("/verifyforgotpasswordotp", verifyForgotPasswordOtp);
 router.post("/resetpassword", resetPassword);
+
 export default router;

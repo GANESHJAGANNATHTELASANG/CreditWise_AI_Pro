@@ -23,7 +23,12 @@ app.use(cookieParser());
 app.use(morgan("dev"));
 
 import authRouter from "./routes/auth.routes.js";
+import loanRouter from "./routes/loan.routes.js";
+import adminRouter from "./routes/admin.routes.js";
+
 app.use("/api/v1", authRouter);
+app.use("/api/v1/loan", loanRouter);
+app.use("/api/v1/admin", adminRouter);
 
 app.get("/", (req, res) => {
   res.status(200).json({
