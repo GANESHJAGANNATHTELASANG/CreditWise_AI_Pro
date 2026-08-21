@@ -68,11 +68,7 @@ export const applyForLoan = async (req, res) => {
       self_employed: loanData.self_employed,
     };
 
-    console.log("ML Data:", mlData);
-
     const mlResult = await predictCreditApproval(mlData);
-
-    console.log("ML Result:", mlResult);
 
     const loanApplication = await LoanApplication.create({
       userId,
@@ -101,11 +97,6 @@ export const applyForLoan = async (req, res) => {
       mlPrediction: mlResult.prediction,
       mlStatus: mlResult.status,
     });
-
-    console.log("Loan Application Created:", loanApplication._id);
-
-    console.log("Authenticated User:", userId);
-    console.log("Validated Loan Data:", loanData);
 
     return res.status(201).json({
       success: true,
