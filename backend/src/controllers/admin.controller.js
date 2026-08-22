@@ -40,6 +40,7 @@ export const getDashboardStats = async (req, res) => {
 };
 
 export const getAllLoanApplications = async (req, res) => {
+
   try {
     const { status, search } = req.query;
 
@@ -174,3 +175,5 @@ export const updateLoanApplicationStatus = async (req, res) => {
     });
   }
 };
+
+

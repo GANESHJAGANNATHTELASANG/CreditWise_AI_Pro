@@ -144,3 +144,17 @@ const LoanApplication = mongoose.model(
 );
 
 export default LoanApplication;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
