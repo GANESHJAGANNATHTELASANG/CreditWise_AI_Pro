@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import api from "../services/api";
 
-const VerifyOtp = () => {
+const VerifyLoginOtp = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -84,7 +84,7 @@ const VerifyOtp = () => {
       setLoading(true);
       setMessage("");
 
-      const response = await api.post("/api/v1/verifyOtp", {
+      const response = await api.post("/api/v1/verifyLoginOtp", {
         email,
         otp,
       });
@@ -299,4 +299,4 @@ const VerifyOtp = () => {
   );
 };
 
-export default VerifyOtp;
+export default VerifyLoginOtp;

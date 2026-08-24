@@ -43,7 +43,7 @@ export const register = async (req, res) => {
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-       if (existingUser.isEmailVerified) {
+      if (existingUser.isEmailVerified) {
         return res.status(400).json({
           message: "The user already exists with this email",
         });
@@ -245,7 +245,7 @@ export const loginUser = async (req, res) => {
     const subject = "for email verification we sent otp so get that";
     await redisClient.setEx(otpKey, 300, otp);
     await sendEmail({ to: email, subject, html });
-    redisClient.setEx(rateLimitkey, 60, "true");
+    await redisClient.setEx(rateLimitkey, 60, "true");
 
     return res
       .status(200)
