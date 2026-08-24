@@ -43,9 +43,47 @@ export const register = async (req, res) => {
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
-      return res
-        .status(400)
-        .json({ message: "the user is already exist with this email" });
+       if (existingUser.isEmailVerified) {
+        return res.status(400).json({
+          message: "The user already exists with this email",
+        });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      existingUser.name = name;
+      existingUser.password = hashedPassword;
+
+      await existingUser.save();
+
+      const otp = generateOTP();
+
+      const otpKey = `otpKey:${email}`;
+
+      await redisClient.setEx(otpKey, 300, otp);
+
+      const expiryMinutes = 5;
+
+      const html = getOtpHtml({
+        otp,
+        name,
+        expiryMinutes,
+      });
+
+      const subject = "Check email for the email verification";
+
+      await sendEmail({
+        to: email,
+        html,
+        subject,
+      });
+
+      await redisClient.setEx(rateLimitKey, 60, "true");
+
+      return res.status(200).json({
+        message:
+          "Your email was not verified earlier. A new OTP has been sent.",
+      });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
