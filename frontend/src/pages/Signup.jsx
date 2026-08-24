@@ -1,7 +1,9 @@
 import { useState } from "react";
 import api from "../services/api";
-
+import { useNavigate } from "react-router-dom";
 const Signup = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -32,6 +34,12 @@ const Signup = () => {
       console.log("Signup response:", response.data);
 
       setMessage(response.data.message || "Registration successful");
+
+      navigate("/verify-otp", {
+        state: {
+          email: formData.email,
+        },
+      });
     } catch (error) {
       console.error("Signup error:", error);
 
