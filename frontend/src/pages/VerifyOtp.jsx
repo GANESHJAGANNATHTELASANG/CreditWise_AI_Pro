@@ -15,10 +15,8 @@ const VerifyOtp = () => {
   if (!email) {
     return (
       <main className="relative flex min-h-screen items-center justify-center overflow-hidden bg-slate-950 px-4">
-        {/* Background */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.18),transparent_35%),radial-gradient(circle_at_80%_30%,rgba(139,92,246,0.16),transparent_35%),radial-gradient(circle_at_50%_100%,rgba(14,165,233,0.12),transparent_40%)]" />
 
-        {/* Grid */}
         <div
           className="absolute inset-0 opacity-[0.07]"
           style={{
@@ -30,17 +28,14 @@ const VerifyOtp = () => {
           }}
         />
 
-        {/* Glows */}
         <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-blue-500/20 blur-[120px]" />
 
         <div className="absolute -right-32 top-20 h-96 w-96 rounded-full bg-violet-500/20 blur-[120px]" />
 
         <div className="absolute bottom-[-200px] left-1/2 h-96 w-[700px] -translate-x-1/2 rounded-full bg-cyan-500/10 blur-[130px]" />
 
-        {/* Content */}
         <div className="relative z-10 w-full max-w-md">
           <div className="rounded-3xl border border-white/10 bg-white/[0.06] p-8 text-center shadow-2xl shadow-black/20 backdrop-blur-2xl">
-            {/* Logo */}
             <div className="mb-7 flex justify-center">
               <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-500 text-lg font-bold text-white shadow-lg shadow-blue-500/20">
                 C
@@ -106,12 +101,8 @@ const VerifyOtp = () => {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-slate-950">
-      {/* ================= BACKGROUND ================= */}
-
-      {/* Main gradient */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.18),transparent_35%),radial-gradient(circle_at_80%_30%,rgba(139,92,246,0.16),transparent_35%),radial-gradient(circle_at_50%_100%,rgba(14,165,233,0.12),transparent_40%)]" />
 
-      {/* Grid */}
       <div
         className="absolute inset-0 opacity-[0.07]"
         style={{
@@ -123,20 +114,14 @@ const VerifyOtp = () => {
         }}
       />
 
-      {/* Blue glow */}
       <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-blue-500/20 blur-[120px]" />
 
-      {/* Violet glow */}
       <div className="absolute -right-32 top-20 h-96 w-96 rounded-full bg-violet-500/20 blur-[120px]" />
 
-      {/* Cyan bottom glow */}
       <div className="absolute bottom-[-200px] left-1/2 h-96 w-[700px] -translate-x-1/2 rounded-full bg-cyan-500/10 blur-[130px]" />
-
-      {/* ================= CONTENT ================= */}
 
       <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
-          {/* Brand */}
           <div className="mb-8 text-center">
             <button
               onClick={() => navigate("/")}
@@ -164,10 +149,7 @@ const VerifyOtp = () => {
             </p>
           </div>
 
-          {/* ================= CARD ================= */}
-
           <div className="rounded-3xl border border-white/10 bg-white/[0.06] p-7 shadow-2xl shadow-black/20 backdrop-blur-2xl sm:p-8">
-            {/* Email */}
             <div className="mb-7 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3">
               <p className="text-xs uppercase tracking-wider text-slate-500">
                 Code sent to
@@ -179,7 +161,6 @@ const VerifyOtp = () => {
             </div>
 
             <form onSubmit={handleSubmit}>
-              {/* OTP Label */}
               <label
                 htmlFor="otp"
                 className="mb-3 block text-sm font-medium text-slate-200"
@@ -187,7 +168,6 @@ const VerifyOtp = () => {
                 Enter verification code
               </label>
 
-              {/* OTP Input */}
               <div className="relative">
                 <svg
                   className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500"
@@ -219,7 +199,6 @@ const VerifyOtp = () => {
                 />
               </div>
 
-              {/* Error */}
               {message && (
                 <div className="mt-4 flex items-center gap-3 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3">
                   <svg
@@ -238,7 +217,6 @@ const VerifyOtp = () => {
                 </div>
               )}
 
-              {/* Verify Button */}
               <button
                 type="submit"
                 disabled={loading || otp.length !== 6}
@@ -248,7 +226,6 @@ const VerifyOtp = () => {
               </button>
             </form>
 
-            {/* Expiry */}
             <div className="mt-6 flex items-center justify-center gap-2 text-xs text-slate-500">
               <svg
                 className="h-4 w-4"
@@ -265,7 +242,6 @@ const VerifyOtp = () => {
               <span>OTP expires in 5 minutes</span>
             </div>
 
-            {/* Back */}
             <div className="mt-6 border-t border-white/10 pt-6 text-center">
               <button
                 type="button"
@@ -277,7 +253,6 @@ const VerifyOtp = () => {
             </div>
           </div>
 
-          {/* Security */}
           <div className="mt-6 flex items-center justify-center gap-2 text-xs text-slate-600">
             <svg
               className="h-4 w-4"

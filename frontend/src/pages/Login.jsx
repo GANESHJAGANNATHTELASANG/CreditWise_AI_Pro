@@ -78,17 +78,14 @@ const Login = () => {
         }}
       />
 
-      {/* Glows */}
       <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-blue-500/20 blur-[120px]" />
 
       <div className="absolute -right-32 top-20 h-96 w-96 rounded-full bg-violet-500/20 blur-[120px]" />
 
       <div className="absolute bottom-[-200px] left-1/2 h-96 w-[700px] -translate-x-1/2 rounded-full bg-cyan-500/10 blur-[130px]" />
 
-      {/* Main Content */}
       <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
-          {/* Brand */}
           <div className="mb-8 text-center">
             <Link to="/" className="inline-flex items-center gap-2">
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500 text-lg font-bold text-white shadow-lg shadow-blue-500/20">
@@ -113,10 +110,8 @@ const Login = () => {
             </p>
           </div>
 
-          {/* Card */}
           <div className="rounded-3xl border border-white/10 bg-white/[0.06] p-7 shadow-2xl shadow-black/20 backdrop-blur-2xl sm:p-8">
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Email */}
               <div>
                 <label
                   htmlFor="email"
@@ -154,7 +149,6 @@ const Login = () => {
                 </div>
               </div>
 
-              {/* Password */}
               <div>
                 <div className="mb-2 flex items-center justify-between">
                   <label
@@ -240,14 +234,12 @@ const Login = () => {
                 </div>
               </div>
 
-              {/* Error */}
               {error && (
                 <div className="rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-400">
                   {error}
                 </div>
               )}
 
-              {/* Login */}
               <button
                 type="submit"
                 disabled={loading}
@@ -259,7 +251,6 @@ const Login = () => {
               </button>
             </form>
 
-            {/* Divider */}
             <div className="my-7 flex items-center gap-4">
               <div className="h-px flex-1 bg-white/10" />
 
@@ -268,7 +259,6 @@ const Login = () => {
               <div className="h-px flex-1 bg-white/10" />
             </div>
 
-            {/* Signup */}
             <p className="text-center text-sm text-slate-400">
               Don't have an account?{" "}
               <Link
@@ -280,7 +270,6 @@ const Login = () => {
             </p>
           </div>
 
-          {/* Security */}
           <div className="mt-6 flex items-center justify-center gap-2 text-xs text-slate-600">
             <svg
               className="h-4 w-4"

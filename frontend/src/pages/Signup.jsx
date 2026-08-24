@@ -55,12 +55,8 @@ const Signup = () => {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-slate-950">
-      {/* ================= BACKGROUND ================= */}
-
-      {/* Main gradient */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(59,130,246,0.18),transparent_35%),radial-gradient(circle_at_80%_30%,rgba(139,92,246,0.16),transparent_35%),radial-gradient(circle_at_50%_100%,rgba(14,165,233,0.12),transparent_40%)]" />
 
-      {/* Grid */}
       <div
         className="absolute inset-0 opacity-[0.07]"
         style={{
@@ -72,21 +68,14 @@ const Signup = () => {
         }}
       />
 
-      {/* Blue glow */}
       <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-blue-500/20 blur-[120px]" />
 
-      {/* Violet glow */}
       <div className="absolute -right-32 top-20 h-96 w-96 rounded-full bg-violet-500/20 blur-[120px]" />
 
-      {/* Cyan glow */}
       <div className="absolute bottom-[-200px] left-1/2 h-96 w-[700px] -translate-x-1/2 rounded-full bg-cyan-500/10 blur-[130px]" />
-
-      {/* ================= CONTENT ================= */}
 
       <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
-          {/* ================= BRAND ================= */}
-
           <div className="mb-8 text-center">
             <button
               type="button"
@@ -116,14 +105,10 @@ const Signup = () => {
             </p>
           </div>
 
-          {/* ================= FORM CARD ================= */}
-
           <form
             onSubmit={handleSubmit}
             className="rounded-3xl border border-white/10 bg-white/[0.06] p-7 shadow-2xl shadow-black/20 backdrop-blur-2xl sm:p-8"
           >
-            {/* Name */}
-
             <div className="mb-5">
               <label
                 htmlFor="name"
@@ -143,8 +128,6 @@ const Signup = () => {
                 required
               />
             </div>
-
-            {/* Email */}
 
             <div className="mb-5">
               <label
@@ -166,8 +149,6 @@ const Signup = () => {
               />
             </div>
 
-            {/* Password */}
-
             <div className="mb-6">
               <label
                 htmlFor="password"
@@ -188,8 +169,6 @@ const Signup = () => {
               />
             </div>
 
-            {/* Submit */}
-
             <button
               type="submit"
               disabled={loading}
@@ -198,15 +177,11 @@ const Signup = () => {
               {loading ? "Creating Account..." : "Create Account"}
             </button>
 
-            {/* Message */}
-
             {message && (
               <div className="mt-4 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-3">
                 <p className="text-center text-sm text-slate-300">{message}</p>
               </div>
             )}
-
-            {/* Login */}
 
             <div className="mt-6 border-t border-white/10 pt-6 text-center">
               <p className="text-sm text-slate-500">Already have an account?</p>
@@ -220,8 +195,6 @@ const Signup = () => {
               </button>
             </div>
           </form>
-
-          {/* ================= SECURITY ================= */}
 
           <div className="mt-6 flex items-center justify-center gap-2 text-xs text-slate-600">
             <svg
