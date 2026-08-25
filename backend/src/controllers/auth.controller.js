@@ -337,7 +337,10 @@ export const refreshAccessToken = async (req, res) => {
     if (!cookiesRef) {
       return res
         .status(400)
-        .json({ message: "the refreshToken is not found in the cookies" });
+        .json({
+          message:
+            "Please log in to your account to apply for a loan. You must be authenticated to access this feature.",
+        });
     }
 
     const verifyRef = jwt.verify(cookiesRef, process.env.SECRATE_TOKEN_REF);

@@ -10,6 +10,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ForgotPasswordOtp from "./pages/ForgotPasswordOtp";
 import ResetPassword from "./pages/ResetPassword";
 import ApplyLoan from "./pages/ApplyLoan";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/forgot-password-otp" element={<ForgotPasswordOtp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/apply-loan" element={<ApplyLoan />} />
+        <Route path="/admin" element={<AdminDashboard />} />
       </Routes>
     </BrowserRouter>
   );

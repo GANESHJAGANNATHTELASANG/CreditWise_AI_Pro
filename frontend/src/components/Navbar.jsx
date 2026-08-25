@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { isAdmin } from "../../../backend/src/middlewares/admin.middleware";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const { logout, isAuthenticated } = useAuth();
+  const { logout, isAuthenticated, isAdmin } = useAuth();
 
   const closeMenu = () => {
     setMenuOpen(false);
@@ -112,6 +113,21 @@ const Navbar = () => {
               </Link>
             </div>
           </div>
+
+          {isAdmin && (
+            <Link
+              to="/admin"
+              className="
+      rounded-xl px-5 py-2.5
+      text-base font-medium text-white/70
+      transition-all duration-300
+      hover:bg-white/10
+      hover:text-white
+    "
+            >
+              Admin
+            </Link>
+          )}
 
           <div className="hidden shrink-0 items-center gap-2 md:flex">
             {!isAuthenticated ? (

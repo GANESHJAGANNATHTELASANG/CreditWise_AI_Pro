@@ -36,6 +36,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   const isAuthenticated = !!user;
+  const isAdmin = user?.role === "admin";
 
   return (
     <AuthContext.Provider
@@ -46,6 +47,7 @@ export const AuthProvider = ({ children }) => {
         loading,
         checkAuth,
         logout,
+        isAdmin,
       }}
     >
       {children}
