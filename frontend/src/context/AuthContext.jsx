@@ -19,6 +19,18 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const logout = async () => {
+    try {
+      await api.post("/api/v1/logout");
+
+      setUser(null);
+    } catch (error) {
+      console.error("Logout error:", error);
+
+      setUser(null);
+    }
+  };
+
   useEffect(() => {
     checkAuth();
   }, []);
@@ -33,6 +45,7 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated,
         loading,
         checkAuth,
+        logout,
       }}
     >
       {children}
