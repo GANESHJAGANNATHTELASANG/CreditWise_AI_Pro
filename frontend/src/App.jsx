@@ -9,6 +9,7 @@ import VerifyLoginOtp from "./pages/VerifyLoginOtp";
 import ForgotPassword from "./pages/ForgotPassword";
 import ForgotPasswordOtp from "./pages/ForgotPasswordOtp";
 import ResetPassword from "./pages/ResetPassword";
+import ApplyLoan from "./pages/ApplyLoan";
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/forgot-password-otp" element={<ForgotPasswordOtp />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/apply-loan" element={<ApplyLoan />} />
       </Routes>
     </BrowserRouter>
   );
